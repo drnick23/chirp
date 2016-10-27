@@ -1,11 +1,13 @@
 package com.codepath.apps.chirp.ui.timeline;
 
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
 
 import com.codepath.apps.chirp.R;
 import com.codepath.apps.chirp.TwitterApplication;
@@ -30,6 +32,9 @@ public class TimelineActivity extends AppCompatActivity implements TweetsAdapter
 
     @BindView(R.id.rvTweets)
     RecyclerView rvTweets;
+
+    @BindView(R.id.abCompose)
+    FloatingActionButton abCompose;
 
     private TwitterClient client;
     private ArrayList<Tweet> tweets;
@@ -65,6 +70,13 @@ public class TimelineActivity extends AppCompatActivity implements TweetsAdapter
             }
         });
 
+        abCompose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onComposeButton();
+            }
+        });
+
         client = TwitterApplication.getRestClient();
         populateTimeline(0);
     }
@@ -88,6 +100,10 @@ public class TimelineActivity extends AppCompatActivity implements TweetsAdapter
 
     // launchers
 
+
+    public void onComposeButton() {
+        Log.d("DEBUG","onComposeButton");
+    }
 
     @Override
     public void onTweetClick(Tweet tweet) {

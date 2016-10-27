@@ -4,5 +4,6 @@
     <string name="app_name">Chirp</string>
     <string name="login_label">Connect with Twitter</string>
     <string name="title_activity_timeline">TimelineActivity</string>
+    <string name="title_activity_compose">ComposeActivity</string>
 
 </resources>
