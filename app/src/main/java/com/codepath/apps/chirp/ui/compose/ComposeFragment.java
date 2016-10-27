@@ -8,11 +8,20 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
 import com.codepath.apps.chirp.R;
+import com.codepath.apps.chirp.TwitterApplication;
+import com.codepath.apps.chirp.models.Tweet;
+import com.codepath.apps.chirp.network.TwitterClient;
+import com.loopj.android.http.JsonHttpResponseHandler;
 
+import org.json.JSONObject;
+
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cz.msebera.android.httpclient.Header;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -23,6 +32,9 @@ import butterknife.OnClick;
  * create an instance of this fragment.
  */
 public class ComposeFragment extends DialogFragment {
+
+    @BindView(R.id.etBody)
+    EditText etBody;
 
     private String title;
 
@@ -59,10 +71,30 @@ public class ComposeFragment extends DialogFragment {
 
     @OnClick(R.id.btSend)
     public void onSendButton() {
-        if (mListener != null) {
-            mListener.onSendTweet("test");
-        }
-        dismiss();
+
+        String body = etBody.getText().toString();
+        TwitterClient client = TwitterApplication.getRestClient();
+
+        client.postUpdateStatus(body, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                Tweet tweet = Tweet.fromJSON(response);
+                mListener.onSendTweet(tweet);
+                dismiss();
+
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                // listener should actually handle error...
+                mListener.onSendTweet(null);
+                dismiss();
+            }
+
+        });
+
+
+
     }
 
     @Override
@@ -94,6 +126,6 @@ public class ComposeFragment extends DialogFragment {
      */
     public interface OnComposeListener {
         // TODO: Update argument type and name
-        void onSendTweet(String body);
+        void onSendTweet(Tweet tweet);
     }
 }

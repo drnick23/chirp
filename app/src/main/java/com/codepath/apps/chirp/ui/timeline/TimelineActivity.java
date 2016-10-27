@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.codepath.apps.chirp.R;
 import com.codepath.apps.chirp.TwitterApplication;
@@ -44,6 +45,7 @@ public class TimelineActivity extends AppCompatActivity implements TweetsAdapter
     private TwitterClient client;
     private ArrayList<Tweet> tweets;
     private TweetsAdapter aTweets;
+    private LinearLayoutManager linearLayoutManager;
 
     // stores the oldest id for our fetched tweets
     private long currentMaxId;
@@ -62,7 +64,7 @@ public class TimelineActivity extends AppCompatActivity implements TweetsAdapter
 
         rvTweets.setAdapter(aTweets);
 
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager = new LinearLayoutManager(this);
 
         rvTweets.setLayoutManager(linearLayoutManager);
 
@@ -76,7 +78,7 @@ public class TimelineActivity extends AppCompatActivity implements TweetsAdapter
                 // add 1 to currentMaxId so we don't fetch the same tweet again since it's inclusive.
                 Tweet oldestTweet = tweets.get(tweets.size()-1);
                 currentMaxId = oldestTweet.getUid();
-                populateTimeline(currentMaxId+1);
+                populateTimeline(currentMaxId+1,false);
                 Log.d("DEBUG", "load more");
             }
         });
@@ -89,11 +91,11 @@ public class TimelineActivity extends AppCompatActivity implements TweetsAdapter
         });
 
         client = TwitterApplication.getRestClient();
-        populateTimeline(0);
+        populateTimeline(0, true);
     }
 
     // get the twitter timeline json and fill our list view
-    private void populateTimeline(long maxId) {
+    private void populateTimeline(long maxId, final boolean reset) {
         Log.d("DEBUG","populateTimeline maxId:"+maxId);
         client.getHomeTimeline(maxId, new JsonHttpResponseHandler() {
             @Override
@@ -101,6 +103,9 @@ public class TimelineActivity extends AppCompatActivity implements TweetsAdapter
                 Log.d("DEBUG",response.toString());
                 // after we get our list of tweets, find the oldest one and remember that
                 // in case we need to fetch again.
+                if (reset) {
+                    tweets.clear();
+                }
                 tweets.addAll(Tweet.fromJSONArray(response));
                 aTweets.notifyDataSetChanged();
             }
@@ -129,10 +134,28 @@ public class TimelineActivity extends AppCompatActivity implements TweetsAdapter
     }
 
     // results from fragments
-
-
     @Override
-    public void onSendTweet(String body) {
-        Log.d("DEBUG","send tweet");
+    public void onSendTweet(Tweet tweet) {
+        if (tweet == null) {
+            // display error
+            Toast.makeText(this,"Could not post tweet",Toast.LENGTH_LONG);
+        } else {
+            // TODO: could be more efficient and fetch tweets and prepend
+            // rather than refresh all.
+            // show immediate result, then refresh.
+
+            // TODO: scroll to top
+            tweets.add(tweet);
+            aTweets.notifyDataSetChanged();
+
+            linearLayoutManager.scrollToPositionWithOffset(0, 0);
+
+            Toast.makeText(this,"Sent Tweet!",Toast.LENGTH_LONG);
+            Log.d("DEBUG","send tweet");
+
+            populateTimeline(0, true);
+
+
+        }
     }
 }

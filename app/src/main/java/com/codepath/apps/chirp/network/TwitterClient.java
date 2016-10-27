@@ -31,9 +31,6 @@ public class TwitterClient extends OAuthBaseClient {
 
 	private static int COUNT_PER_PAGE = 25;
 
-	// set to true/false if don't actually want to post to twitter all the time...
-	private static boolean SILENT_MODE = true;
-
 	public TwitterClient(Context context) {
 		super(context, REST_API_CLASS, REST_URL, REST_CONSUMER_KEY, REST_CONSUMER_SECRET, REST_CALLBACK_URL);
 	}
@@ -57,12 +54,6 @@ public class TwitterClient extends OAuthBaseClient {
 		RequestParams params = new RequestParams();
 		params.put("status", status);
 
-		// so that we don't actually post to twitter when testing
-		if (SILENT_MODE) {
-			Log.d("WARNING","using silent mode");
-			handler.onSuccess(0, null, null);
-			return;
-		}
 		client.post(apiUrl, params, handler);
 	}
 
@@ -74,12 +65,6 @@ public class TwitterClient extends OAuthBaseClient {
 		params.put("status", status);
 		params.put("in_reply_to_status_id", id);
 
-		// so that we don't actually post to twitter when testing
-		if (SILENT_MODE) {
-			Log.d("WARNING","using silent mode");
-			handler.onSuccess(0, null, null);
-			return;
-		}
 		client.post(apiUrl, params, handler);
 	}
 }
