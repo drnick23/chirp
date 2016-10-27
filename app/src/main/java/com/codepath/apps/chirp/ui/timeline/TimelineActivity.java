@@ -1,5 +1,6 @@
 package com.codepath.apps.chirp.ui.timeline;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -14,10 +15,13 @@ import com.codepath.apps.chirp.TwitterApplication;
 import com.codepath.apps.chirp.helpers.EndlessRecyclerViewScrollListener;
 import com.codepath.apps.chirp.models.Tweet;
 import com.codepath.apps.chirp.network.TwitterClient;
+import com.codepath.apps.chirp.ui.compose.ComposeActivity;
+import com.codepath.apps.chirp.ui.detail.DetailActivity;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
 
@@ -99,14 +103,17 @@ public class TimelineActivity extends AppCompatActivity implements TweetsAdapter
     }
 
     // launchers
-
-
     public void onComposeButton() {
         Log.d("DEBUG","onComposeButton");
+        Intent i = new Intent(getApplicationContext(), ComposeActivity.class);
+        startActivity(i);
     }
 
     @Override
     public void onTweetClick(Tweet tweet) {
         Log.d("DEBUG","CLICKED TWEET");
+        Intent i = new Intent(getApplicationContext(), DetailActivity.class);
+        i.putExtra("tweet", Parcels.wrap(tweet));
+        startActivity(i);
     }
 }

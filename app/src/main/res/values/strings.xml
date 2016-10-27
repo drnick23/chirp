@@ -5,5 +5,6 @@
     <string name="login_label">Connect with Twitter</string>
     <string name="title_activity_timeline">TimelineActivity</string>
     <string name="title_activity_compose">ComposeActivity</string>
+    <string name="title_activity_detail">DetailActivity</string>
 
 </resources>

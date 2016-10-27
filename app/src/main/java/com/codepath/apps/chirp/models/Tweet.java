@@ -3,6 +3,7 @@ package com.codepath.apps.chirp.models;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.parceler.Parcel;
 
 import java.util.ArrayList;
 
@@ -10,11 +11,14 @@ import java.util.ArrayList;
  * Created by nick on 10/26/16.
  */
 
+@Parcel
 public class Tweet {
     private long uid;
     private String body;
     private String createdAt;
     private User user;
+
+    public Tweet() {}
 
     public long getUid() {
         return uid;

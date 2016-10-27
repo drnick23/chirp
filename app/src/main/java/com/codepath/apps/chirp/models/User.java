@@ -2,17 +2,19 @@ package com.codepath.apps.chirp.models;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.parceler.Parcel;
 
 /**
  * Created by nick on 10/26/16.
  */
-
+@Parcel
 public class User {
     private String name;
     private long uid;
     private String screenName;
     private String profileImageUrl;
 
+    public User() {}
 
     public static User fromJSON(JSONObject jsonObject) {
         User user = new User();
