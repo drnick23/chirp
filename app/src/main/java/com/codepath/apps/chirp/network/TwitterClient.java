@@ -1,6 +1,7 @@
 package com.codepath.apps.chirp.network;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.codepath.oauth.OAuthBaseClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -28,27 +29,54 @@ public class TwitterClient extends OAuthBaseClient {
 	public static final String REST_CONSUMER_SECRET = "B519mICav67cqWDWNzXarmArBANwf9W749zx28"; // Change this
 	public static final String REST_CALLBACK_URL = "oauth://cpchirp"; // Change this (here and in manifest)
 
+	// set to true/false if don't actually want to post to twitter all the time...
+	private static boolean SILENT_MODE = true;
+	private static int COUNT_PER_PAGE = 25;
+
 	public TwitterClient(Context context) {
 		super(context, REST_API_CLASS, REST_URL, REST_CONSUMER_KEY, REST_CONSUMER_SECRET, REST_CALLBACK_URL);
 	}
 
-
-	/* 1. Define the endpoint URL with getApiUrl and pass a relative path to the endpoint
-	 * 	  i.e getApiUrl("statuses/home_timeline.json");
-	 * 2. Define the parameters to pass to the request (query or body)
-	 *    i.e RequestParams params = new RequestParams("foo", "bar");
-	 * 3. Define the request method and make a call to the client
-	 *    i.e client.get(apiUrl, params, handler);
-	 *    i.e client.post(apiUrl, params, handler);
-	 */
-
-	// statuses/home_timeline.json count=25 since_id=1
-	public void getHomeTimeline(AsyncHttpResponseHandler handler) {
+	// starts at page 1
+	public void getHomeTimeline(AsyncHttpResponseHandler handler, int page) {
 		String apiUrl = getApiUrl("statuses/home_timeline.json");
 		// Can specify query string params directly or through RequestParams.
 		RequestParams params = new RequestParams();
-		params.put("count", 25);
-		params.put("since_id",1);
+		params.put("count", COUNT_PER_PAGE);
+		params.put("since_id", 1 + COUNT_PER_PAGE * page);
 		getClient().get(apiUrl, params, handler);
+	}
+
+	public void postUpdateStatus(AsyncHttpResponseHandler handler, String status) {
+		Log.d("DEBUG", "updateStatus: " + status);
+
+		String apiUrl = getApiUrl("statuses/update.json");
+		RequestParams params = new RequestParams();
+		params.put("status", status);
+
+		// so that we don't actually post to twitter when testing
+		if (SILENT_MODE) {
+			Log.d("WARNING","using silent mode");
+			handler.onSuccess(0, null, null);
+			return;
+		}
+		client.post(apiUrl, params, handler);
+	}
+
+	public void postUpdateReply(AsyncHttpResponseHandler handler, String status, String id) {
+		Log.d("DEBUG", "updateReply: " + status);
+
+		String apiUrl = getApiUrl("statuses/update.json");
+		RequestParams params = new RequestParams();
+		params.put("status", status);
+		params.put("in_reply_to_status_id", id);
+
+		// so that we don't actually post to twitter when testing
+		if (SILENT_MODE) {
+			Log.d("WARNING","using silent mode");
+			handler.onSuccess(0, null, null);
+			return;
+		}
+		client.post(apiUrl, params, handler);
 	}
 }
