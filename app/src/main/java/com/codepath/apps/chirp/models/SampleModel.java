@@ -1,6 +1,6 @@
 package com.codepath.apps.chirp.models;
 
-import com.codepath.apps.chirp.MyDatabase;
+import com.codepath.apps.chirp.db.MyDatabase;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;

@@ -1,4 +1,4 @@
-package com.codepath.apps.chirp;
+package com.codepath.apps.chirp.db;
 
 import com.raizlabs.android.dbflow.annotation.Database;
 

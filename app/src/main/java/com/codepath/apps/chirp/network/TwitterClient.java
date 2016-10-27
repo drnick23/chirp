@@ -1,4 +1,4 @@
-package com.codepath.apps.chirp;
+package com.codepath.apps.chirp.network;
 
 import android.content.Context;
 

@@ -1,10 +1,13 @@
-package com.codepath.apps.chirp;
+package com.codepath.apps.chirp.ui.timeline;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 
+import com.codepath.apps.chirp.R;
+import com.codepath.apps.chirp.TwitterApplication;
+import com.codepath.apps.chirp.network.TwitterClient;
 import com.codepath.apps.chirp.models.Tweet;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
