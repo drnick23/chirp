@@ -29,25 +29,28 @@ public class TwitterClient extends OAuthBaseClient {
 	public static final String REST_CONSUMER_SECRET = "B519mICav67cqWDWNzXarmArBANwf9W749zx28"; // Change this
 	public static final String REST_CALLBACK_URL = "oauth://cpchirp"; // Change this (here and in manifest)
 
+	private static int COUNT_PER_PAGE = 25;
+
 	// set to true/false if don't actually want to post to twitter all the time...
 	private static boolean SILENT_MODE = true;
-	private static int COUNT_PER_PAGE = 25;
 
 	public TwitterClient(Context context) {
 		super(context, REST_API_CLASS, REST_URL, REST_CONSUMER_KEY, REST_CONSUMER_SECRET, REST_CALLBACK_URL);
 	}
 
-	// starts at page 1
-	public void getHomeTimeline(AsyncHttpResponseHandler handler, int page) {
+	// starts at page 0
+	public void getHomeTimeline(long maxId, AsyncHttpResponseHandler handler) {
 		String apiUrl = getApiUrl("statuses/home_timeline.json");
 		// Can specify query string params directly or through RequestParams.
 		RequestParams params = new RequestParams();
 		params.put("count", COUNT_PER_PAGE);
-		params.put("since_id", 1 + COUNT_PER_PAGE * page);
+		if (maxId > 0) {
+			params.put("max_id", maxId);
+		}
 		getClient().get(apiUrl, params, handler);
 	}
 
-	public void postUpdateStatus(AsyncHttpResponseHandler handler, String status) {
+	public void postUpdateStatus(String status, AsyncHttpResponseHandler handler) {
 		Log.d("DEBUG", "updateStatus: " + status);
 
 		String apiUrl = getApiUrl("statuses/update.json");
@@ -63,7 +66,7 @@ public class TwitterClient extends OAuthBaseClient {
 		client.post(apiUrl, params, handler);
 	}
 
-	public void postUpdateReply(AsyncHttpResponseHandler handler, String status, String id) {
+	public void postUpdateReply(String status, String id, AsyncHttpResponseHandler handler) {
 		Log.d("DEBUG", "updateReply: " + status);
 
 		String apiUrl = getApiUrl("statuses/update.json");

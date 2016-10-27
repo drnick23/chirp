@@ -45,6 +45,9 @@ public class TimelineActivity extends AppCompatActivity implements TweetsAdapter
     private ArrayList<Tweet> tweets;
     private TweetsAdapter aTweets;
 
+    // stores the oldest id for our fetched tweets
+    private long currentMaxId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,7 +73,10 @@ public class TimelineActivity extends AppCompatActivity implements TweetsAdapter
             public void onLoadMore(int page, int totalItemsCount) {
                 // Triggered only when new data needs to be appended to the list
                 // Add whatever code is needed to append new items to the bottom of the list
-                populateTimeline(page-1);
+                // add 1 to currentMaxId so we don't fetch the same tweet again since it's inclusive.
+                Tweet oldestTweet = tweets.get(tweets.size()-1);
+                currentMaxId = oldestTweet.getUid();
+                populateTimeline(currentMaxId+1);
                 Log.d("DEBUG", "load more");
             }
         });
@@ -87,11 +93,14 @@ public class TimelineActivity extends AppCompatActivity implements TweetsAdapter
     }
 
     // get the twitter timeline json and fill our list view
-    private void populateTimeline(int page) {
-        client.getHomeTimeline(new JsonHttpResponseHandler() {
+    private void populateTimeline(long maxId) {
+        Log.d("DEBUG","populateTimeline maxId:"+maxId);
+        client.getHomeTimeline(maxId, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 Log.d("DEBUG",response.toString());
+                // after we get our list of tweets, find the oldest one and remember that
+                // in case we need to fetch again.
                 tweets.addAll(Tweet.fromJSONArray(response));
                 aTweets.notifyDataSetChanged();
             }
