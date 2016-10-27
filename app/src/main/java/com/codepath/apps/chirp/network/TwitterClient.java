@@ -1,6 +1,7 @@
 package com.codepath.apps.chirp.network;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.codepath.oauth.OAuthBaseClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -28,27 +29,42 @@ public class TwitterClient extends OAuthBaseClient {
 	public static final String REST_CONSUMER_SECRET = "B519mICav67cqWDWNzXarmArBANwf9W749zx28"; // Change this
 	public static final String REST_CALLBACK_URL = "oauth://cpchirp"; // Change this (here and in manifest)
 
+	private static int COUNT_PER_PAGE = 25;
+
 	public TwitterClient(Context context) {
 		super(context, REST_API_CLASS, REST_URL, REST_CONSUMER_KEY, REST_CONSUMER_SECRET, REST_CALLBACK_URL);
 	}
 
-
-	/* 1. Define the endpoint URL with getApiUrl and pass a relative path to the endpoint
-	 * 	  i.e getApiUrl("statuses/home_timeline.json");
-	 * 2. Define the parameters to pass to the request (query or body)
-	 *    i.e RequestParams params = new RequestParams("foo", "bar");
-	 * 3. Define the request method and make a call to the client
-	 *    i.e client.get(apiUrl, params, handler);
-	 *    i.e client.post(apiUrl, params, handler);
-	 */
-
-	// statuses/home_timeline.json count=25 since_id=1
-	public void getHomeTimeline(AsyncHttpResponseHandler handler) {
+	// starts at page 0
+	public void getHomeTimeline(long maxId, AsyncHttpResponseHandler handler) {
 		String apiUrl = getApiUrl("statuses/home_timeline.json");
 		// Can specify query string params directly or through RequestParams.
 		RequestParams params = new RequestParams();
-		params.put("count", 25);
-		params.put("since_id",1);
+		params.put("count", COUNT_PER_PAGE);
+		if (maxId > 0) {
+			params.put("max_id", maxId);
+		}
 		getClient().get(apiUrl, params, handler);
+	}
+
+	public void postUpdateStatus(String status, AsyncHttpResponseHandler handler) {
+		Log.d("DEBUG", "updateStatus: " + status);
+
+		String apiUrl = getApiUrl("statuses/update.json");
+		RequestParams params = new RequestParams();
+		params.put("status", status);
+
+		client.post(apiUrl, params, handler);
+	}
+
+	public void postUpdateReply(String status, String id, AsyncHttpResponseHandler handler) {
+		Log.d("DEBUG", "updateReply: " + status);
+
+		String apiUrl = getApiUrl("statuses/update.json");
+		RequestParams params = new RequestParams();
+		params.put("status", status);
+		params.put("in_reply_to_status_id", id);
+
+		client.post(apiUrl, params, handler);
 	}
 }

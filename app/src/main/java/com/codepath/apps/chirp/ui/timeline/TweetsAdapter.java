@@ -76,6 +76,12 @@ public class TweetsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     public class StandardTweetViewHolder extends BaseTweetViewHolder {
         @BindView(R.id.tvBody)
         TextView tvBody;
+
+        @BindView(R.id.tvDisplayName)
+        TextView tvDisplayName;
+
+        @BindView(R.id.tvTimeAgo)
+        TextView tvTimeAgo;
         //@BindView(R.id.ivThumbnail)
         //ImageView ivThumbnail;
 
@@ -84,7 +90,9 @@ public class TweetsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         }
 
         public void configure(Tweet tweet) {
+            tvDisplayName.setText(tweet.getUser().getScreenName());
             tvBody.setText(tweet.getBody());
+            tvTimeAgo.setText(tweet.getTimeAgoCreatedAt());
         }
     }
 

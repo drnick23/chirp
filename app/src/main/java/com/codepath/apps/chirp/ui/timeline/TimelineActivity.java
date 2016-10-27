@@ -3,19 +3,21 @@ package com.codepath.apps.chirp.ui.timeline;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.codepath.apps.chirp.R;
 import com.codepath.apps.chirp.TwitterApplication;
 import com.codepath.apps.chirp.helpers.EndlessRecyclerViewScrollListener;
 import com.codepath.apps.chirp.models.Tweet;
 import com.codepath.apps.chirp.network.TwitterClient;
-import com.codepath.apps.chirp.ui.compose.ComposeActivity;
+import com.codepath.apps.chirp.ui.compose.ComposeFragment;
 import com.codepath.apps.chirp.ui.detail.DetailActivity;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
@@ -29,7 +31,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import cz.msebera.android.httpclient.Header;
 
-public class TimelineActivity extends AppCompatActivity implements TweetsAdapter.OnTweetsAdapterListener {
+public class TimelineActivity extends AppCompatActivity implements TweetsAdapter.OnTweetsAdapterListener, ComposeFragment.OnComposeListener {
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -43,6 +45,10 @@ public class TimelineActivity extends AppCompatActivity implements TweetsAdapter
     private TwitterClient client;
     private ArrayList<Tweet> tweets;
     private TweetsAdapter aTweets;
+    private LinearLayoutManager linearLayoutManager;
+
+    // stores the oldest id for our fetched tweets
+    private long currentMaxId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +64,7 @@ public class TimelineActivity extends AppCompatActivity implements TweetsAdapter
 
         rvTweets.setAdapter(aTweets);
 
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager = new LinearLayoutManager(this);
 
         rvTweets.setLayoutManager(linearLayoutManager);
 
@@ -69,7 +75,10 @@ public class TimelineActivity extends AppCompatActivity implements TweetsAdapter
             public void onLoadMore(int page, int totalItemsCount) {
                 // Triggered only when new data needs to be appended to the list
                 // Add whatever code is needed to append new items to the bottom of the list
-                populateTimeline(page-1);
+                // add 1 to currentMaxId so we don't fetch the same tweet again since it's inclusive.
+                Tweet oldestTweet = tweets.get(tweets.size()-1);
+                currentMaxId = oldestTweet.getUid();
+                populateTimeline(currentMaxId+1,false);
                 Log.d("DEBUG", "load more");
             }
         });
@@ -82,15 +91,21 @@ public class TimelineActivity extends AppCompatActivity implements TweetsAdapter
         });
 
         client = TwitterApplication.getRestClient();
-        populateTimeline(0);
+        populateTimeline(0, true);
     }
 
     // get the twitter timeline json and fill our list view
-    private void populateTimeline(int page) {
-        client.getHomeTimeline(new JsonHttpResponseHandler() {
+    private void populateTimeline(long maxId, final boolean reset) {
+        Log.d("DEBUG","populateTimeline maxId:"+maxId);
+        client.getHomeTimeline(maxId, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 Log.d("DEBUG",response.toString());
+                // after we get our list of tweets, find the oldest one and remember that
+                // in case we need to fetch again.
+                if (reset) {
+                    tweets.clear();
+                }
                 tweets.addAll(Tweet.fromJSONArray(response));
                 aTweets.notifyDataSetChanged();
             }
@@ -105,8 +120,9 @@ public class TimelineActivity extends AppCompatActivity implements TweetsAdapter
     // launchers
     public void onComposeButton() {
         Log.d("DEBUG","onComposeButton");
-        Intent i = new Intent(getApplicationContext(), ComposeActivity.class);
-        startActivity(i);
+        FragmentManager fm = getSupportFragmentManager();
+        ComposeFragment fragment = ComposeFragment.newInstance("Compose");
+        fragment.show(fm, "compose");
     }
 
     @Override
@@ -115,5 +131,31 @@ public class TimelineActivity extends AppCompatActivity implements TweetsAdapter
         Intent i = new Intent(getApplicationContext(), DetailActivity.class);
         i.putExtra("tweet", Parcels.wrap(tweet));
         startActivity(i);
+    }
+
+    // results from fragments
+    @Override
+    public void onSendTweet(Tweet tweet) {
+        if (tweet == null) {
+            // display error
+            Toast.makeText(this,"Could not post tweet",Toast.LENGTH_LONG);
+        } else {
+            // TODO: could be more efficient and fetch tweets and prepend
+            // rather than refresh all.
+            // show immediate result, then refresh.
+
+            // TODO: scroll to top
+            tweets.add(tweet);
+            aTweets.notifyDataSetChanged();
+
+            linearLayoutManager.scrollToPositionWithOffset(0, 0);
+
+            Toast.makeText(this,"Sent Tweet!",Toast.LENGTH_LONG);
+            Log.d("DEBUG","send tweet");
+
+            populateTimeline(0, true);
+
+
+        }
     }
 }
