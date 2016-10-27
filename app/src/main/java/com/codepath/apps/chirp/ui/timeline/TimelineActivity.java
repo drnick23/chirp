@@ -3,6 +3,7 @@ package com.codepath.apps.chirp.ui.timeline;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,7 +16,7 @@ import com.codepath.apps.chirp.TwitterApplication;
 import com.codepath.apps.chirp.helpers.EndlessRecyclerViewScrollListener;
 import com.codepath.apps.chirp.models.Tweet;
 import com.codepath.apps.chirp.network.TwitterClient;
-import com.codepath.apps.chirp.ui.compose.ComposeActivity;
+import com.codepath.apps.chirp.ui.compose.ComposeFragment;
 import com.codepath.apps.chirp.ui.detail.DetailActivity;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
@@ -29,7 +30,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import cz.msebera.android.httpclient.Header;
 
-public class TimelineActivity extends AppCompatActivity implements TweetsAdapter.OnTweetsAdapterListener {
+public class TimelineActivity extends AppCompatActivity implements TweetsAdapter.OnTweetsAdapterListener, ComposeFragment.OnComposeListener {
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -105,8 +106,9 @@ public class TimelineActivity extends AppCompatActivity implements TweetsAdapter
     // launchers
     public void onComposeButton() {
         Log.d("DEBUG","onComposeButton");
-        Intent i = new Intent(getApplicationContext(), ComposeActivity.class);
-        startActivity(i);
+        FragmentManager fm = getSupportFragmentManager();
+        ComposeFragment fragment = ComposeFragment.newInstance("Compose");
+        fragment.show(fm, "compose");
     }
 
     @Override
@@ -115,5 +117,13 @@ public class TimelineActivity extends AppCompatActivity implements TweetsAdapter
         Intent i = new Intent(getApplicationContext(), DetailActivity.class);
         i.putExtra("tweet", Parcels.wrap(tweet));
         startActivity(i);
+    }
+
+    // results from fragments
+
+
+    @Override
+    public void onSendTweet(String body) {
+        Log.d("DEBUG","send tweet");
     }
 }
