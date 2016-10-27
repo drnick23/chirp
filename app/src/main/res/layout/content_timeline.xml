@@ -9,11 +9,11 @@
     tools:context="com.codepath.apps.chirp.ui.timeline.TimelineActivity"
     tools:showIn="@layout/activity_timeline">
 
-    <ListView
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rvTweets"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:id="@+id/lvTweets" />
+        android:layout_alignParentStart="true" />
+
 </RelativeLayout>
