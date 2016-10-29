@@ -18,10 +18,21 @@ import java.util.Locale;
 
 @Parcel
 public class Tweet {
+
+    public static final String CREATED_AT = "created_at";
+    public static final String ID = "id";
+    public static final String TEXT = "text";
+    public static final String USER = "user";
+
+    public static final String FAVORITE_COUNT = "favorite_count";
+    public static final String RETWEET_COUNT = "retweet_count";
+
     private long uid;
-    private String body;
+    private String text;
     private String createdAt;
     private User user;
+    private int favoriteCount = 0;
+    private int retweetCount = 0;
 
     public Tweet() {}
 
@@ -29,8 +40,8 @@ public class Tweet {
         return uid;
     }
 
-    public String getBody() {
-        return body;
+    public String getText() {
+        return text;
     }
 
     public String getCreatedAt() {
@@ -61,10 +72,66 @@ public class Tweet {
         Tweet tweet = new Tweet();
 
         try {
-            tweet.body = jsonObject.getString("text");
-            tweet.uid = jsonObject.getLong("id");
-            tweet.createdAt = jsonObject.getString("created_at");
-            tweet.user = User.fromJSON(jsonObject.getJSONObject("user"));
+            tweet.text = jsonObject.getString(TEXT);
+            tweet.uid = jsonObject.getLong(ID);
+            tweet.createdAt = jsonObject.getString(CREATED_AT);
+            tweet.user = User.fromJSON(jsonObject.getJSONObject(USER));
+
+            if (jsonObject.has(RETWEET_COUNT)) {
+                tweet.retweetCount = jsonObject.getInt(RETWEET_COUNT);
+            }
+            if (jsonObject.has(FAVORITE_COUNT)) {
+                tweet.retweetCount = jsonObject.getInt(FAVORITE_COUNT);
+            }
+
+            // drill down for memdia
+            if (jsonObject.has("extended_entities")) {
+                JSONObject jsonExtendedEntitiesObject = jsonObject.getJSONObject("extended_entities");
+
+                if (jsonExtendedEntitiesObject.has("media")) {
+                    JSONArray jsonMediaArray = jsonExtendedEntitiesObject.getJSONArray("media");
+
+                    if (jsonMediaArray.length() > 0) {
+                        JSONObject jsonMediaObject = jsonMediaArray.getJSONObject(0);
+
+                        if (jsonMediaObject.has("media_url")) {
+
+                        }
+/*
+                        if (jsonMediaObject != null && jsonMediaObject.has(VIDEO_INFO)) {
+                            tweet.setMedia_type(jsonMediaObject.get(TYPE).getAsString());
+                            JsonObject jsonVideoInfoObject = jsonMediaObject.get(VIDEO_INFO)
+                                    .getAsJsonObject();
+
+                            if (jsonVideoInfoObject != null && jsonVideoInfoObject.has(VARIANTS)) {
+                                JsonArray jsonVariantsArray = jsonVideoInfoObject.get(VARIANTS)
+                                        .getAsJsonArray();
+
+                                if (jsonVariantsArray != null && jsonVariantsArray.size() > 0) {
+
+                                    for (int i = 0; i < jsonVariantsArray.size() ; i++) {
+                                        JsonObject jsonVariantObject = jsonVariantsArray.get(i)
+                                                .getAsJsonObject();
+
+                                        if (jsonVariantObject != null &&
+                                                jsonVariantObject.has(CONTENT_TYPE)) {
+                                            if (jsonVariantObject.get(CONTENT_TYPE).getAsString()
+                                                    .equals(VIDEO_MP4)){
+                                                tweet.setVideo_url(jsonVariantObject.get(URL)
+                                                        .getAsString());
+                                                tweet.setMedia_content_type(
+                                                        jsonVariantObject.get(CONTENT_TYPE)
+                                                                .getAsString());
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }*/
+                    }
+                }
+            }
+
         } catch (JSONException e) {
             e.printStackTrace();
         }

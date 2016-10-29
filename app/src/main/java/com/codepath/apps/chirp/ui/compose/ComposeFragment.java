@@ -9,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.codepath.apps.chirp.R;
 import com.codepath.apps.chirp.TwitterApplication;
@@ -33,8 +35,20 @@ import cz.msebera.android.httpclient.Header;
  */
 public class ComposeFragment extends DialogFragment {
 
+    @BindView(R.id.tvName)
+    TextView tvName;
+
+    @BindView(R.id.ivProfileImage)
+    ImageView ivProfileImage;
+
+    @BindView(R.id.tvScreenName)
+    TextView tvScreenName;
+
     @BindView(R.id.etBody)
     EditText etBody;
+
+    @BindView(R.id.tvCountRemaining)
+    TextView tvCountRemaining;
 
     private String title;
 

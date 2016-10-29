@@ -2,11 +2,14 @@ package com.codepath.apps.chirp.ui.timeline;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.codepath.apps.chirp.R;
 import com.codepath.apps.chirp.models.Tweet;
 
@@ -77,13 +80,17 @@ public class TweetsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         @BindView(R.id.tvBody)
         TextView tvBody;
 
+        @BindView(R.id.tvName)
+        TextView tvName;
+
         @BindView(R.id.tvDisplayName)
         TextView tvDisplayName;
 
         @BindView(R.id.tvTimeAgo)
         TextView tvTimeAgo;
-        //@BindView(R.id.ivThumbnail)
-        //ImageView ivThumbnail;
+
+        @BindView(R.id.ivProfileImage)
+        ImageView ivProfileImage;
 
         public StandardTweetViewHolder(View itemView) {
             super(itemView);
@@ -91,8 +98,15 @@ public class TweetsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
         public void configure(Tweet tweet) {
             tvDisplayName.setText(tweet.getUser().getScreenName());
-            tvBody.setText(tweet.getBody());
+            tvBody.setText(tweet.getText());
             tvTimeAgo.setText(tweet.getTimeAgoCreatedAt());
+            tvName.setText(tweet.getUser().getName());
+            if (!TextUtils.isEmpty(tweet.getUser().getProfileImageUrl())) {
+                Glide.with(mContext).load(tweet.getUser().getProfileImageUrl())
+                        //.placeholder(R.id.?)
+                        .fitCenter()
+                        .into(ivProfileImage);
+            }
         }
     }
 
