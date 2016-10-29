@@ -92,6 +92,9 @@ public class TweetsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         @BindView(R.id.ivProfileImage)
         ImageView ivProfileImage;
 
+        @BindView(R.id.ivMedia)
+        ImageView ivMedia;
+
         public StandardTweetViewHolder(View itemView) {
             super(itemView);
         }
@@ -106,6 +109,15 @@ public class TweetsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                         //.placeholder(R.id.?)
                         .fitCenter()
                         .into(ivProfileImage);
+            }
+            if (!TextUtils.isEmpty(tweet.getMediaUrl())) {
+                Glide.with(mContext).load(tweet.getMediaUrl())
+                        //.placeholder(R.id.?)
+                        .fitCenter()
+                        .into(ivMedia);
+                ivMedia.setVisibility(View.VISIBLE);
+            } else {
+                ivMedia.setVisibility(View.GONE);
             }
         }
     }

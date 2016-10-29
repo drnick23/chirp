@@ -30,6 +30,7 @@ public class Tweet {
     private long uid;
     private String text;
     private String createdAt;
+    private String mediaUrl;
     private User user;
     private int favoriteCount = 0;
     private int retweetCount = 0;
@@ -68,6 +69,18 @@ public class Tweet {
         return user;
     }
 
+    public String getMediaUrl() {
+        return mediaUrl;
+    }
+
+    public int getFavoriteCount() {
+        return favoriteCount;
+    }
+
+    public int getRetweetCount() {
+        return retweetCount;
+    }
+
     public static Tweet fromJSON(JSONObject jsonObject) {
         Tweet tweet = new Tweet();
 
@@ -95,7 +108,7 @@ public class Tweet {
                         JSONObject jsonMediaObject = jsonMediaArray.getJSONObject(0);
 
                         if (jsonMediaObject.has("media_url")) {
-
+                            tweet.mediaUrl = jsonMediaObject.getString("media_url");
                         }
 /*
                         if (jsonMediaObject != null && jsonMediaObject.has(VIDEO_INFO)) {
