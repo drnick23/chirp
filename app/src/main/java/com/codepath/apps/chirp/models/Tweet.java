@@ -34,6 +34,7 @@ public class Tweet {
     private int mediaType = 0;
     private String createdAt;
     private String mediaUrl;
+    private String videoUrl;
     private User user;
     private int favoriteCount = 0;
     private int retweetCount = 0;
@@ -72,12 +73,20 @@ public class Tweet {
         return user;
     }
 
+    public boolean hasMedia() {
+        return mediaType != 0;
+    }
+
     public int getMediaType() {
         return mediaType;
     }
 
     public String getMediaUrl() {
         return mediaUrl;
+    }
+
+    public String getVideoUrl() {
+        return videoUrl;
     }
 
     public int getFavoriteCount() {
@@ -122,7 +131,24 @@ public class Tweet {
                             }
                             else if (type.equals("video")) {
                                 tweet.mediaType = MEDIA_TYPE_VIDEO;
+                                if (jsonMediaObject.has("video_info")) {
+                                    JSONObject jsonVideoInfoObject = jsonMediaObject.getJSONObject("video_info");
+                                    if (jsonVideoInfoObject.has("variants")) {
+                                        JSONArray jsonVariantsArray = jsonVideoInfoObject.getJSONArray("variants");
+                                        if (jsonVariantsArray.length() > 0) {
+                                            JSONObject jsonVariantObject = jsonVariantsArray.getJSONObject(0);
+                                            if (jsonVariantObject.has("url")) {
+                                                tweet.videoUrl = jsonVariantObject.getString("url");
+                                            }
+                                        }
+
+                                    }
+                                }
+
                             }
+                            //else if (type.equals("animated_gif")) {
+                            //    tweet.mediaType = MEDIA_TYPE_ANIMATED_GIF;
+                            //}
                             tweet.mediaUrl = jsonMediaObject.getString("media_url");
                         }
 

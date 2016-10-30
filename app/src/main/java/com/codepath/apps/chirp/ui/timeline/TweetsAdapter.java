@@ -1,13 +1,17 @@
 package com.codepath.apps.chirp.ui.timeline;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.media.MediaPlayer;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.MediaController;
 import android.widget.TextView;
+import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
 import com.codepath.apps.chirp.R;
@@ -92,8 +96,11 @@ public class TweetsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         @BindView(R.id.ivProfileImage)
         ImageView ivProfileImage;
 
-        @BindView(R.id.ivMedia)
-        ImageView ivMedia;
+        @BindView(R.id.ivPhoto)
+        ImageView ivPhoto;
+
+        @BindView(R.id.ivVideo)
+        VideoView ivVideo;
 
         public StandardTweetViewHolder(View itemView) {
             super(itemView);
@@ -114,18 +121,30 @@ public class TweetsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 Glide.with(mContext).load(tweet.getMediaUrl())
                         //.placeholder(R.id.?)
                         .fitCenter()
-                        .into(ivMedia);
-                ivMedia.setVisibility(View.VISIBLE);
+                        .into(ivPhoto);
+                ivPhoto.setVisibility(View.VISIBLE);
+                ivVideo.setVisibility(View.GONE);
+                tvBody.setBackgroundColor(Color.parseColor("#00ff00"));
             }
-            else if (tweet.getMediaType() == Tweet.MEDIA_TYPE_VIDEO) {
-                // todo: embed video
-                //Glide.with(mContext).load(tweet.getMediaUrl())
-                        //.placeholder(R.id.?)
-                        //.fitCenter()
-                        //.into(ivMedia);
-                ivMedia.setVisibility(View.VISIBLE);
+            else if ((tweet.getMediaType() == Tweet.MEDIA_TYPE_VIDEO) && (tweet.getVideoUrl() != null)){
+                ivVideo.setVideoPath(tweet.getVideoUrl());
+                MediaController mediaController = new MediaController(mContext);
+                mediaController.setAnchorView(ivVideo);
+                ivVideo.setMediaController(mediaController);
+                ivVideo.requestFocus();
+                ivVideo.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                    // Close the progress bar and play the video
+                    public void onPrepared(MediaPlayer mp) {
+                        ivVideo.start();
+                    }
+                });
+                ivPhoto.setVisibility(View.GONE);
+                ivVideo.setVisibility(View.VISIBLE);
+                tvBody.setBackgroundColor(Color.parseColor("#ff0000"));
             } else {
-                ivMedia.setVisibility(View.GONE);
+                ivPhoto.setVisibility(View.GONE);
+                ivVideo.setVisibility(View.GONE);
+                tvBody.setBackgroundColor(Color.parseColor("#0000ff"));
             }
         }
     }
