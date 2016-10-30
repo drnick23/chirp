@@ -64,3 +64,14 @@ dependencies {
 dependencies {
     compile 'com.android.support:support-v4:24.+'
 }
+
+// fenster
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.malmstein:fenster:0.0.2'
+    }
+}
+
