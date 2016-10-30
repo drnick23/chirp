@@ -23,12 +23,15 @@ public class Tweet {
     public static final String ID = "id";
     public static final String TEXT = "text";
     public static final String USER = "user";
+    public static final int MEDIA_TYPE_PHOTO = 1;
+    public static final int MEDIA_TYPE_VIDEO = 2;
 
     public static final String FAVORITE_COUNT = "favorite_count";
     public static final String RETWEET_COUNT = "retweet_count";
 
     private long uid;
     private String text;
+    private int mediaType = 0;
     private String createdAt;
     private String mediaUrl;
     private User user;
@@ -69,6 +72,10 @@ public class Tweet {
         return user;
     }
 
+    public int getMediaType() {
+        return mediaType;
+    }
+
     public String getMediaUrl() {
         return mediaUrl;
     }
@@ -97,7 +104,7 @@ public class Tweet {
                 tweet.retweetCount = jsonObject.getInt(FAVORITE_COUNT);
             }
 
-            // drill down for memdia
+            // drill down for media
             if (jsonObject.has("extended_entities")) {
                 JSONObject jsonExtendedEntitiesObject = jsonObject.getJSONObject("extended_entities");
 
@@ -107,40 +114,19 @@ public class Tweet {
                     if (jsonMediaArray.length() > 0) {
                         JSONObject jsonMediaObject = jsonMediaArray.getJSONObject(0);
 
-                        if (jsonMediaObject.has("media_url")) {
+                        if (jsonMediaObject.has("type") && jsonMediaObject.has("media_url")) {
+                            String type = jsonMediaObject.getString("type");
+                            if (type.equals("photo")) {
+                                tweet.mediaType = MEDIA_TYPE_PHOTO;
+
+                            }
+                            else if (type.equals("video")) {
+                                tweet.mediaType = MEDIA_TYPE_VIDEO;
+                            }
                             tweet.mediaUrl = jsonMediaObject.getString("media_url");
                         }
-/*
-                        if (jsonMediaObject != null && jsonMediaObject.has(VIDEO_INFO)) {
-                            tweet.setMedia_type(jsonMediaObject.get(TYPE).getAsString());
-                            JsonObject jsonVideoInfoObject = jsonMediaObject.get(VIDEO_INFO)
-                                    .getAsJsonObject();
 
-                            if (jsonVideoInfoObject != null && jsonVideoInfoObject.has(VARIANTS)) {
-                                JsonArray jsonVariantsArray = jsonVideoInfoObject.get(VARIANTS)
-                                        .getAsJsonArray();
 
-                                if (jsonVariantsArray != null && jsonVariantsArray.size() > 0) {
-
-                                    for (int i = 0; i < jsonVariantsArray.size() ; i++) {
-                                        JsonObject jsonVariantObject = jsonVariantsArray.get(i)
-                                                .getAsJsonObject();
-
-                                        if (jsonVariantObject != null &&
-                                                jsonVariantObject.has(CONTENT_TYPE)) {
-                                            if (jsonVariantObject.get(CONTENT_TYPE).getAsString()
-                                                    .equals(VIDEO_MP4)){
-                                                tweet.setVideo_url(jsonVariantObject.get(URL)
-                                                        .getAsString());
-                                                tweet.setMedia_content_type(
-                                                        jsonVariantObject.get(CONTENT_TYPE)
-                                                                .getAsString());
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }*/
                     }
                 }
             }

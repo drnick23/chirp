@@ -110,11 +110,19 @@ public class TweetsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                         .fitCenter()
                         .into(ivProfileImage);
             }
-            if (!TextUtils.isEmpty(tweet.getMediaUrl())) {
+            if (tweet.getMediaType() == Tweet.MEDIA_TYPE_PHOTO) {
                 Glide.with(mContext).load(tweet.getMediaUrl())
                         //.placeholder(R.id.?)
                         .fitCenter()
                         .into(ivMedia);
+                ivMedia.setVisibility(View.VISIBLE);
+            }
+            else if (tweet.getMediaType() == Tweet.MEDIA_TYPE_VIDEO) {
+                // todo: embed video
+                //Glide.with(mContext).load(tweet.getMediaUrl())
+                        //.placeholder(R.id.?)
+                        //.fitCenter()
+                        //.into(ivMedia);
                 ivMedia.setVisibility(View.VISIBLE);
             } else {
                 ivMedia.setVisibility(View.GONE);
