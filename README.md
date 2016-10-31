@@ -47,3 +47,7 @@ The following **bonus** features are implemented:
 The following **additional** features are implemented:
 
 * [ ] List anything else that you can get done to improve the app functionality!
+
+## gif/video
+
+Click for video/gif (http://imgur.com/a/Eu1Od)
