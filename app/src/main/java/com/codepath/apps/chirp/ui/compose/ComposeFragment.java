@@ -1,15 +1,23 @@
 package com.codepath.apps.chirp.ui.compose;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.codepath.apps.chirp.R;
 import com.codepath.apps.chirp.TwitterApplication;
 import com.codepath.apps.chirp.models.Tweet;
@@ -31,10 +39,25 @@ import cz.msebera.android.httpclient.Header;
  * Use the {@link ComposeFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ComposeFragment extends DialogFragment {
+public class ComposeFragment extends DialogFragment implements TextWatcher {
+
+    @BindView(R.id.tvName)
+    TextView tvName;
+
+    @BindView(R.id.ivProfileImage)
+    ImageView ivProfileImage;
+
+    @BindView(R.id.tvScreenName)
+    TextView tvScreenName;
 
     @BindView(R.id.etBody)
     EditText etBody;
+
+    @BindView(R.id.tvCountRemaining)
+    TextView tvCountRemaining;
+
+    @BindView(R.id.btSend)
+    Button btSend;
 
     private String title;
 
@@ -67,6 +90,16 @@ public class ComposeFragment extends DialogFragment {
         String title = getArguments().getString("title", "Search Filters");
         getDialog().setTitle(title);
 
+        // TODO: use the actual logged in user
+        tvName.setText("@drnicolas23");
+        tvScreenName.setText("Nicolas Halper");
+        Glide.with(this).load("https://pbs.twimg.com/profile_images/449220684317609986/yfCBIt8t_400x400.png")
+                //.placeholder(R.id.?)
+                .fitCenter()
+                .into(ivProfileImage);
+
+        etBody.addTextChangedListener(this);
+
     }
 
     @OnClick(R.id.btSend)
@@ -93,8 +126,6 @@ public class ComposeFragment extends DialogFragment {
 
         });
 
-
-
     }
 
     @Override
@@ -114,6 +145,18 @@ public class ComposeFragment extends DialogFragment {
         mListener = null;
     }
 
+    @Override
+    public void onResume() {
+        // Get existing layout params for the window
+        ViewGroup.LayoutParams params = getDialog().getWindow().getAttributes();
+        // Assign window properties to fill the parent
+        params.width = WindowManager.LayoutParams.MATCH_PARENT;
+        params.height = WindowManager.LayoutParams.MATCH_PARENT;
+        getDialog().getWindow().setAttributes((android.view.WindowManager.LayoutParams) params);
+        // Call super onResume after sizing
+        super.onResume();
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -127,5 +170,30 @@ public class ComposeFragment extends DialogFragment {
     public interface OnComposeListener {
         // TODO: Update argument type and name
         void onSendTweet(Tweet tweet);
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        long currentLength = charSequence.length();
+        long charactersLeft = 140 - currentLength;
+
+        if (charactersLeft < 0) {
+            etBody.setTextColor(Color.RED);
+            btSend.setEnabled(false);
+        } else {
+            etBody.setTextColor(Color.BLACK);
+            btSend.setEnabled(true);
+        }
+        tvCountRemaining.setText("" + charactersLeft);
+    }
+
+    @Override
+    public void afterTextChanged(Editable editable) {
+
     }
 }
