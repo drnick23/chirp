@@ -8,8 +8,8 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.codepath.apps.chirp.R;
-import com.codepath.apps.chirp.ui.timeline.TimelineActivity;
 import com.codepath.apps.chirp.network.TwitterClient;
+import com.codepath.apps.chirp.ui.timeline.TimelineActivity;
 import com.codepath.oauth.OAuthLoginActionBarActivity;
 
 public class LoginActivity extends OAuthLoginActionBarActivity<TwitterClient> {
@@ -33,6 +33,7 @@ public class LoginActivity extends OAuthLoginActionBarActivity<TwitterClient> {
 	@Override
 	public void onLoginSuccess() {
 		Log.d("DEBUG","onLoginSuccess");
+
 		Intent i = new Intent(this, TimelineActivity.class);
 		startActivity(i);
 		Toast.makeText(this,"Login success!",Toast.LENGTH_LONG).show();

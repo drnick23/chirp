@@ -73,10 +73,9 @@
         android:layout_width="match_parent"
         app:srcCompat="@drawable/ic_launcher"
         android:id="@+id/ivVideo"
-        android:layout_height="120dp"
+        android:layout_height="160dp"
         android:layout_below="@+id/tvBody"
-        android:layout_toRightOf="@+id/ivProfileImage"
-        android:layout_toEndOf="@+id/ivProfileImage" />
+        android:layout_alignLeft="@id/tvBody" />
 
 
 

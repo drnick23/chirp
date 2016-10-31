@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.codepath.apps.chirp.R;
 import com.codepath.apps.chirp.TwitterApplication;
 import com.codepath.apps.chirp.models.Tweet;
@@ -80,6 +81,14 @@ public class ComposeFragment extends DialogFragment {
         // Fetch arguments from bundle and set title
         String title = getArguments().getString("title", "Search Filters");
         getDialog().setTitle(title);
+
+        // TODO: use the actual logged in user
+        tvName.setText("@drnicolas23");
+        tvScreenName.setText("Nicolas Halper");
+        Glide.with(this).load("https://pbs.twimg.com/profile_images/449220684317609986/yfCBIt8t_400x400.png")
+                //.placeholder(R.id.?)
+                .fitCenter()
+                .into(ivProfileImage);
 
     }
 
