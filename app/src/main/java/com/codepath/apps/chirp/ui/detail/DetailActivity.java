@@ -55,6 +55,7 @@ public class DetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_detail);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Detail");
 
         tweet = (Tweet) Parcels.unwrap(getIntent().getParcelableExtra("tweet"));
         Log.d("DEBUG",tweet.toString());

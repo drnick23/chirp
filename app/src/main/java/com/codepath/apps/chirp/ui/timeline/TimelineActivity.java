@@ -51,6 +51,7 @@ public class TimelineActivity extends AppCompatActivity implements TweetsAdapter
         setContentView(R.layout.activity_timeline);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Timeline");
 
         tweets = new ArrayList<>();
         aTweets = new TweetsAdapter(this,tweets);
