@@ -69,18 +69,14 @@
         android:layout_toRightOf="@+id/ivProfileImage"
         android:layout_toEndOf="@+id/ivProfileImage" />
 
-    <VideoView
+    <com.yqritc.scalablevideoview.ScalableVideoView
         android:layout_width="match_parent"
-        app:srcCompat="@drawable/ic_launcher"
+        app:scalableType="fitCenter"
         android:id="@+id/ivVideo"
         android:layout_height="120dp"
         android:layout_below="@+id/tvBody"
         android:layout_toRightOf="@+id/ivProfileImage"
         android:layout_toEndOf="@+id/ivProfileImage" />
-
-
-
-
 
 </RelativeLayout>
 
