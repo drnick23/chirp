@@ -2,6 +2,13 @@ package com.codepath.apps.chirp.models;
 
 import android.text.format.DateUtils;
 
+import com.codepath.apps.chirp.db.MyDatabase;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.PrimaryKey;
+import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.structure.BaseModel;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -15,9 +22,9 @@ import java.util.Locale;
 /**
  * Created by nick on 10/26/16.
  */
-
-@Parcel
-public class Tweet {
+@Table(database = MyDatabase.class)
+@Parcel(analyze={Tweet.class})
+public class Tweet extends BaseModel {
 
     public static final String CREATED_AT = "created_at";
     public static final String ID = "id";
@@ -29,15 +36,34 @@ public class Tweet {
     public static final String FAVORITE_COUNT = "favorite_count";
     public static final String RETWEET_COUNT = "retweet_count";
 
-    private long uid;
-    private String text;
-    private int mediaType = 0;
-    private String createdAt;
-    private String mediaUrl;
-    private String videoUrl;
-    private User user;
-    private int favoriteCount = 0;
-    private int retweetCount = 0;
+    @PrimaryKey
+    @Column
+    long uid;
+
+    @Column
+    String text;
+
+    @Column
+    int mediaType = 0;
+
+    @Column
+    String createdAt;
+
+    @Column
+    String mediaUrl;
+
+    @Column
+    String videoUrl;
+
+    @Column
+    @ForeignKey(saveForeignKeyModel = true)
+    User user;
+
+    @Column
+    int favoriteCount = 0;
+
+    @Column
+    int retweetCount = 0;
 
     public Tweet() {}
 
