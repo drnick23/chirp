@@ -122,6 +122,9 @@ public class TimelineActivity extends AppCompatActivity implements TweetsAdapter
         Log.d("DEBUG","onComposeButton");
         FragmentManager fm = getSupportFragmentManager();
         ComposeFragment fragment = ComposeFragment.newInstance("Compose");
+
+        //fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.Dialog_FullScreenSmallInset);
+
         fragment.show(fm, "compose");
     }
 
