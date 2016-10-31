@@ -50,4 +50,4 @@ The following **additional** features are implemented:
 
 ## gif/video
 
-Click for video/gif (http://imgur.com/a/Eu1Od)
+Click for video/gif (http://i.imgur.com/74gf8wm.mp4)
