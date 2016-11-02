@@ -3,7 +3,9 @@ package com.codepath.apps.chirp.ui.timeline;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -11,7 +13,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.codepath.apps.chirp.R;
-import com.codepath.apps.chirp.fragments.HomeTimelineFragment;
+import com.codepath.apps.chirp.fragments.TimelineFragmentPagerAdapter;
 import com.codepath.apps.chirp.models.Tweet;
 import com.codepath.apps.chirp.ui.compose.ComposeFragment;
 import com.codepath.apps.chirp.ui.detail.DetailActivity;
@@ -29,7 +31,7 @@ public class TimelineActivity extends AppCompatActivity implements TweetsAdapter
     @BindView(R.id.abCompose)
     FloatingActionButton abCompose;
 
-    private HomeTimelineFragment fragmentTweetsList;
+    //private HomeTimelineFragment fragmentTweetsList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,8 +42,17 @@ public class TimelineActivity extends AppCompatActivity implements TweetsAdapter
         getSupportActionBar().setTitle("Timeline");
 
         if (savedInstanceState == null) {
-            fragmentTweetsList = (HomeTimelineFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_timeline);
+            //fragmentTweetsList = (HomeTimelineFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_timeline);
         }
+
+        // Get the ViewPager and set it's PagerAdapter so that it can display items
+        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
+        viewPager.setAdapter(new TimelineFragmentPagerAdapter(getSupportFragmentManager(),
+                TimelineActivity.this));
+
+        // Give the TabLayout the ViewPager
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
+        tabLayout.setupWithViewPager(viewPager);
 
         abCompose.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,15 +95,8 @@ public class TimelineActivity extends AppCompatActivity implements TweetsAdapter
             // show immediate result, then refresh.
 
             // TODO: scroll to top
-            fragmentTweetsList.addToTop(tweet);
-            /*tweets.add(tweet);
-            aTweets.notifyDataSetChanged();
+            //fragmentTweetsList.addToTop(tweet);
 
-            linearLayoutManager.scrollToPositionWithOffset(0, 0);
-
-
-
-            populateTimeline(0, true);*/
 
             Toast.makeText(this,"Sent Tweet!",Toast.LENGTH_LONG).show();
             Log.d("DEBUG","send tweet");
