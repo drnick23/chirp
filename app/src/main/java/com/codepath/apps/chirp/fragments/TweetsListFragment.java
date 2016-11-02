@@ -28,4 +28,5 @@ public class TweetsListFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
+    // creation lifescyle
 }
