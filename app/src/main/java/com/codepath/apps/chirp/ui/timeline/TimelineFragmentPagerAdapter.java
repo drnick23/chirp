@@ -1,9 +1,12 @@
-package com.codepath.apps.chirp.fragments;
+package com.codepath.apps.chirp.ui.timeline;
 
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+
+import com.codepath.apps.chirp.fragments.HomeTimelineFragment;
+import com.codepath.apps.chirp.fragments.MentionsTimelineFragment;
 
 /**
  * Created by nick on 11/2/16.
