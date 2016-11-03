@@ -116,7 +116,7 @@ public class TwitterPersistence {
         // save all tweets
         int length = tweets.size();
         for (int i=0;i<length;i++) {
-            tweets.get(i).save();
+            //tweets.get(i).save();
         }
     }
 
