@@ -1,28 +1,32 @@
 package com.codepath.apps.chirp.ui.profile;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.codepath.apps.chirp.R;
 import com.codepath.apps.chirp.TwitterApplication;
-import com.codepath.apps.chirp.fragments.UserTimelineFragment;
+import com.codepath.apps.chirp.models.Tweet;
+import com.codepath.apps.chirp.ui.detail.DetailActivity;
+import com.codepath.apps.chirp.ui.timeline.TweetsAdapter;
+import com.codepath.apps.chirp.ui.timeline.fragments.UserTimelineFragment;
 import com.codepath.apps.chirp.models.User;
 import com.codepath.apps.chirp.network.TwitterClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONObject;
+import org.parceler.Parcels;
 
 import cz.msebera.android.httpclient.Header;
 
-import static com.codepath.apps.chirp.R.id.ivProfileImage;
 
-
-public class ProfileActivity extends AppCompatActivity {
+public class ProfileActivity extends AppCompatActivity implements TweetsAdapter.OnTweetsAdapterListener {
 
     TwitterClient client;
     User user;
@@ -78,6 +82,22 @@ public class ProfileActivity extends AppCompatActivity {
                 .fitCenter()
                 .into(ivProfileImage);
 
+    }
+
+    @Override
+    public void onTweetClick(Tweet tweet) {
+        Log.d("DEBUG","CLICKED TWEET");
+        Intent i = new Intent(getApplicationContext(), DetailActivity.class);
+        i.putExtra("tweet", Parcels.wrap(tweet));
+        startActivity(i);
+    }
+
+    @Override
+    public void onTweetProfileImageClick(Tweet tweet) {
+        Log.d("DEBUG","CLICKED TWEET PROFILE IMAGE");
+        Intent i = new Intent(getApplicationContext(), ProfileActivity.class);
+        i.putExtra("user", Parcels.wrap(tweet.getUser()));
+        startActivity(i);
     }
 
 }

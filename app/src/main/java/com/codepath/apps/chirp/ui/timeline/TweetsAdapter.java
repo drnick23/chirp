@@ -41,6 +41,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     // Define the listener interface
     public interface OnTweetsAdapterListener {
         void onTweetClick(Tweet tweet);
+        void onTweetProfileImageClick(Tweet tweet);
     }
 
     // Pass in the tweets array into the constructor
@@ -61,6 +62,7 @@ public class TweetsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         public BaseTweetViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -145,6 +147,19 @@ public class TweetsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 ivVideo.setVisibility(View.GONE);
                 //tvBody.setBackgroundColor(Color.parseColor("#0000ff"));
             }
+
+            ivProfileImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Triggers click upwards to the adapter on click
+                    if (aaListener != null) {
+                        int position = getAdapterPosition();
+                        if (aaListener != null && position != RecyclerView.NO_POSITION) {
+                            aaListener.onTweetProfileImageClick(tweets.get(position));
+                        }
+                    }
+                }
+            });
         }
     }
 

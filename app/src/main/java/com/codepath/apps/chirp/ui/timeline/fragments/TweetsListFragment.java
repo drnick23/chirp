@@ -1,5 +1,6 @@
-package com.codepath.apps.chirp.fragments;
+package com.codepath.apps.chirp.ui.timeline.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -23,7 +24,7 @@ import java.util.ArrayList;
  * Created by nick on 11/1/16.
  */
 
-public class TweetsListFragment extends Fragment {
+public class TweetsListFragment extends Fragment implements TweetsAdapter.OnTweetsAdapterListener {
 
     //@BindView(R.id.rvTweets)
     RecyclerView rvTweets;
@@ -34,9 +35,22 @@ public class TweetsListFragment extends Fragment {
     protected TweetsAdapter aTweets;
     protected LinearLayoutManager linearLayoutManager;
 
+    private TweetsAdapter.OnTweetsAdapterListener listener;
+
     // stores the oldest id for our fetched tweets
     private long currentMaxId;
 
+    // Store the listener (activity) that will have events fired once the fragment is attached
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof TweetsAdapter.OnTweetsAdapterListener) {
+            listener = (TweetsAdapter.OnTweetsAdapterListener) context;
+        } else {
+            throw new ClassCastException(context.toString()
+                    + " must implement TweetsAdapter.OnTweetsAdapterListener");
+        }
+    }
 
     @Nullable
     @Override
@@ -50,7 +64,7 @@ public class TweetsListFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         rvTweets = (RecyclerView) view.findViewById(R.id.rvTweets);
-        //aTweets.setOnTweetsAdapterListener(this);
+        aTweets.setOnTweetsAdapterListener(this);
         rvTweets.setAdapter(aTweets);
 
         linearLayoutManager = new LinearLayoutManager(getActivity());
@@ -105,5 +119,13 @@ public class TweetsListFragment extends Fragment {
         // populateTimeline(0, true);
     }
 
-    // creation lifescyle
+    @Override
+    public void onTweetClick(Tweet tweet) {
+        listener.onTweetClick(tweet);
+    }
+
+    @Override
+    public void onTweetProfileImageClick(Tweet tweet) {
+       listener.onTweetProfileImageClick(tweet);
+    }
 }

@@ -86,6 +86,14 @@ public class TimelineActivity extends AppCompatActivity implements TweetsAdapter
         startActivity(i);
     }
 
+    @Override
+    public void onTweetProfileImageClick(Tweet tweet) {
+        Log.d("DEBUG","CLICKED TWEET PROFILE IMAGE");
+        Intent i = new Intent(getApplicationContext(), ProfileActivity.class);
+        i.putExtra("user", Parcels.wrap(tweet.getUser()));
+        startActivity(i);
+    }
+
     // results from fragments
     @Override
     public void onSendTweet(Tweet tweet) {

@@ -1,4 +1,4 @@
-package com.codepath.apps.chirp.fragments;
+package com.codepath.apps.chirp.ui.timeline.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -13,7 +13,7 @@ import java.util.ArrayList;
  * Created by nick on 11/1/16.
  */
 
-public class MentionsTimelineFragment extends TweetsListFragment {
+public class HomeTimelineFragment extends TweetsListFragment {
 
 
     @Override
@@ -25,9 +25,9 @@ public class MentionsTimelineFragment extends TweetsListFragment {
 
     @Override
     public void populateTimeline(long maxId, final boolean reset) {
-        Log.d("DEBUG","MentionsTimelineFragment populateTimeline maxId:"+maxId);
+        Log.d("DEBUG","populateTimeline maxId:"+maxId);
 
-        TwitterPersistence.getInstance().getMentionsTimeline(maxId, 0, new TwitterPersistence.OnTimelineResults() {
+        TwitterPersistence.getInstance().getHomeTimeline(maxId, 0, new TwitterPersistence.OnTimelineResults() {
             @Override
             public void onSuccess(ArrayList<Tweet> tweetList) {
                 addAll(tweetList, reset);
