@@ -9,21 +9,21 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
 import com.codepath.apps.chirp.R;
-import com.codepath.apps.chirp.fragments.TimelineFragmentPagerAdapter;
 import com.codepath.apps.chirp.models.Tweet;
 import com.codepath.apps.chirp.ui.compose.ComposeFragment;
-import com.codepath.apps.chirp.ui.detail.DetailActivity;
-
-import org.parceler.Parcels;
+import com.codepath.apps.chirp.ui.profile.ProfileActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class TimelineActivity extends AppCompatActivity implements TweetsAdapter.OnTweetsAdapterListener, ComposeFragment.OnComposeListener {
+public class TimelineActivity extends AppCompatActivity implements ComposeFragment.OnComposeListener {
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -31,7 +31,7 @@ public class TimelineActivity extends AppCompatActivity implements TweetsAdapter
     @BindView(R.id.abCompose)
     FloatingActionButton abCompose;
 
-    //private HomeTimelineFragment fragmentTweetsList;
+   // private HomeTimelineFragment fragmentHomeTimeline;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,9 +41,9 @@ public class TimelineActivity extends AppCompatActivity implements TweetsAdapter
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Timeline");
 
-        if (savedInstanceState == null) {
-            //fragmentTweetsList = (HomeTimelineFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_timeline);
-        }
+        //if (savedInstanceState == null) {
+        //    fragmentTweetsList = (HomeTimelineFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_timeline);
+        //}
 
         // Get the ViewPager and set it's PagerAdapter so that it can display items
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
@@ -75,14 +75,6 @@ public class TimelineActivity extends AppCompatActivity implements TweetsAdapter
         fragment.show(fm, "compose");
     }
 
-    @Override
-    public void onTweetClick(Tweet tweet) {
-        Log.d("DEBUG","CLICKED TWEET");
-        Intent i = new Intent(getApplicationContext(), DetailActivity.class);
-        i.putExtra("tweet", Parcels.wrap(tweet));
-        startActivity(i);
-    }
-
     // results from fragments
     @Override
     public void onSendTweet(Tweet tweet) {
@@ -101,5 +93,38 @@ public class TimelineActivity extends AppCompatActivity implements TweetsAdapter
             Toast.makeText(this,"Sent Tweet!",Toast.LENGTH_LONG).show();
             Log.d("DEBUG","send tweet");
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_timeline, menu);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        switch (item.getItemId()) {
+            case R.id.miProfile:
+                // launch the filter settings activity
+                Log.d("DEBUG","TODO: launch filter settings");
+                launchProfileActivity();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    void launchProfileActivity() {
+        Log.d("DEBUG","launch profile");
+        Intent i = new Intent(this, ProfileActivity.class);
+        startActivity(i);
     }
 }

@@ -1,4 +1,4 @@
-package com.codepath.apps.chirp.fragments;
+package com.codepath.apps.chirp.ui.timeline.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

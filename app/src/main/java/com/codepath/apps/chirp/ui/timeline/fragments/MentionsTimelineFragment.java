@@ -1,4 +1,4 @@
-package com.codepath.apps.chirp.fragments;
+package com.codepath.apps.chirp.ui.timeline.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -25,7 +25,7 @@ public class MentionsTimelineFragment extends TweetsListFragment {
 
     @Override
     public void populateTimeline(long maxId, final boolean reset) {
-        Log.d("DEBUG","populateTimeline maxId:"+maxId);
+        Log.d("DEBUG","MentionsTimelineFragment populateTimeline maxId:"+maxId);
 
         TwitterPersistence.getInstance().getMentionsTimeline(maxId, 0, new TwitterPersistence.OnTimelineResults() {
             @Override
