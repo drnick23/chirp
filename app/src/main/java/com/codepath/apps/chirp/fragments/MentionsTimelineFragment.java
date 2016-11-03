@@ -25,7 +25,7 @@ public class MentionsTimelineFragment extends TweetsListFragment {
 
     @Override
     public void populateTimeline(long maxId, final boolean reset) {
-        Log.d("DEBUG","populateTimeline maxId:"+maxId);
+        Log.d("DEBUG","MentionsTimelineFragment populateTimeline maxId:"+maxId);
 
         TwitterPersistence.getInstance().getMentionsTimeline(maxId, 0, new TwitterPersistence.OnTimelineResults() {
             @Override

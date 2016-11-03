@@ -33,19 +33,24 @@ public class TwitterPersistence {
         return instance;
     }
 
-    public void getUserTimeline(String screenName, final OnTimelineResults results) {
+    public void getUserTimeline(String screenName, final long maxId, long sinceId, final OnTimelineResults results) {
         TwitterClient client = TwitterApplication.getRestClient();
         if (!NetworkUtils.isOnline()) {
             results.onFailure("Offline mode. Connect internet for more.");
             return;
         }
-        client.getUserTimeline(screenName, new JsonHttpResponseHandler() {
+        client.getUserTimeline(screenName, maxId, sinceId, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 Log.d("DEBUG",response.toString());
                 // after we get our list of tweets, find the oldest one and remember that
                 // in case we need to fetch again.
                 ArrayList<Tweet> tweets = Tweet.fromJSONArray(response);
+                if (tweets.size() == 1) {
+                    if (tweets.get(0).getUid() < maxId) {
+                        tweets.clear(); // single result for twitter re-iterates the bogus last one
+                    }
+                }
                 //saveHomeTimelineToDisk(tweets);
                 results.onSuccess(tweets);
             }
@@ -58,7 +63,7 @@ public class TwitterPersistence {
         });
     }
 
-    public void getMentionsTimeline(long maxId, int sinceId, final OnTimelineResults results) {
+    public void getMentionsTimeline(final long maxId, int sinceId, final OnTimelineResults results) {
         TwitterClient client = TwitterApplication.getRestClient();
 
         /*
@@ -84,7 +89,13 @@ public class TwitterPersistence {
                 Log.d("DEBUG",response.toString());
                 // after we get our list of tweets, find the oldest one and remember that
                 // in case we need to fetch again.
+                Log.d("DEBUG", "maxId:"+maxId);
                 ArrayList<Tweet> tweets = Tweet.fromJSONArray(response);
+                if (tweets.size() == 1) {
+                    if (tweets.get(0).getUid() < maxId) {
+                        tweets.clear(); // single result for twitter re-iterates the bogus last one
+                    }
+                }
                 //saveHomeTimelineToDisk(tweets);
                 results.onSuccess(tweets);
             }
@@ -127,7 +138,7 @@ public class TwitterPersistence {
     }
 
     // starts at page 0
-    public void getHomeTimeline(long maxId, long sinceId, final OnTimelineResults results) {
+    public void getHomeTimeline(final long maxId, long sinceId, final OnTimelineResults results) {
         TwitterClient client = TwitterApplication.getRestClient();
 
 
@@ -154,6 +165,11 @@ public class TwitterPersistence {
                 // after we get our list of tweets, find the oldest one and remember that
                 // in case we need to fetch again.
                 ArrayList<Tweet> tweets = Tweet.fromJSONArray(response);
+                if (tweets.size() == 1) {
+                    if (tweets.get(0).getUid() < maxId) {
+                        tweets.clear(); // single result for twitter re-iterates the bogus last one
+                    }
+                }
                 saveHomeTimelineToDisk(tweets);
                 results.onSuccess(tweets);
             }

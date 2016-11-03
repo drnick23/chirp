@@ -36,7 +36,7 @@ public class UserTimelineFragment extends TweetsListFragment {
 
         String screen_name = getArguments().getString("screen_name");
 
-        TwitterPersistence.getInstance().getUserTimeline(screen_name, new TwitterPersistence.OnTimelineResults() {
+        TwitterPersistence.getInstance().getUserTimeline(screen_name, maxId, 0, new TwitterPersistence.OnTimelineResults() {
             @Override
             public void onSuccess(ArrayList<Tweet> tweetList) {
                 addAll(tweetList, reset);

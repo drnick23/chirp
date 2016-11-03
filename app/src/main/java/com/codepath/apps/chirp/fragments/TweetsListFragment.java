@@ -69,8 +69,6 @@ public class TweetsListFragment extends Fragment {
             }
         });
 
-        populateTimeline(0, true);
-
         populateTimeline(0,true);
     }
 
