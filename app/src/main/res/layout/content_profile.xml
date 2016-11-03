@@ -13,4 +13,21 @@
     tools:context="com.codepath.apps.chirp.ui.profile.ProfileActivity"
     tools:showIn="@layout/activity_profile">
 
+    <RelativeLayout
+        android:id="@+id/rlUserHeader"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true">
+
+    </RelativeLayout>
+
+    <FrameLayout
+        android:id="@+id/flContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/rlUserHeader"
+        android:layout_alignParentStart="true">
+
+    </FrameLayout>
 </RelativeLayout>

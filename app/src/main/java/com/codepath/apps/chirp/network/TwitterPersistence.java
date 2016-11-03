@@ -33,6 +33,31 @@ public class TwitterPersistence {
         return instance;
     }
 
+    public void getUserTimeline(String screenName, final OnTimelineResults results) {
+        TwitterClient client = TwitterApplication.getRestClient();
+        if (!NetworkUtils.isOnline()) {
+            results.onFailure("Offline mode. Connect internet for more.");
+            return;
+        }
+        client.getUserTimeline(screenName, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                Log.d("DEBUG",response.toString());
+                // after we get our list of tweets, find the oldest one and remember that
+                // in case we need to fetch again.
+                ArrayList<Tweet> tweets = Tweet.fromJSONArray(response);
+                //saveHomeTimelineToDisk(tweets);
+                results.onSuccess(tweets);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                Log.d("DEBUG", errorResponse.toString());
+                results.onFailure(errorResponse.toString());
+            }
+        });
+    }
+
     public void getMentionsTimeline(long maxId, int sinceId, final OnTimelineResults results) {
         TwitterClient client = TwitterApplication.getRestClient();
 
@@ -60,7 +85,7 @@ public class TwitterPersistence {
                 // after we get our list of tweets, find the oldest one and remember that
                 // in case we need to fetch again.
                 ArrayList<Tweet> tweets = Tweet.fromJSONArray(response);
-                saveHomeTimelineToDisk(tweets);
+                //saveHomeTimelineToDisk(tweets);
                 results.onSuccess(tweets);
             }
 
@@ -107,7 +132,7 @@ public class TwitterPersistence {
 
 
         // if neither maxId or sinceId are specified and we have no network, see if we have results from disk
-        if ((maxId == 0) && (sinceId == 0) && !NetworkUtils.isOnline()) {
+        /*if ((maxId == 0) && (sinceId == 0) && !NetworkUtils.isOnline()) {
             ArrayList<Tweet> tweets = loadHomeTimelineFromDisk(maxId);
             if (tweets.size() > 0) {
                 // if we have disk results, return those already.
@@ -115,7 +140,7 @@ public class TwitterPersistence {
                 results.onSuccess(tweets);
                 return;
             }
-        }
+        }*/
 
         if (!NetworkUtils.isOnline()) {
             results.onFailure("Offline mode. Connect internet for more.");

@@ -11,8 +11,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.codepath.apps.chirp.R;
+import com.codepath.apps.chirp.TwitterApplication;
 import com.codepath.apps.chirp.helpers.EndlessRecyclerViewScrollListener;
 import com.codepath.apps.chirp.models.Tweet;
+import com.codepath.apps.chirp.network.TwitterClient;
 import com.codepath.apps.chirp.ui.timeline.TweetsAdapter;
 
 import java.util.ArrayList;
@@ -25,6 +27,8 @@ public class TweetsListFragment extends Fragment {
 
     //@BindView(R.id.rvTweets)
     RecyclerView rvTweets;
+
+    protected TwitterClient twitterClient;
 
     protected ArrayList<Tweet> tweets;
     protected TweetsAdapter aTweets;
@@ -78,7 +82,7 @@ public class TweetsListFragment extends Fragment {
         aTweets = new TweetsAdapter(getActivity(),tweets);
         // todo: either this needs to implement listener or activity does?
 
-
+        twitterClient = TwitterApplication.getRestClient();
     }
 
     public void populateTimeline(long maxId, final boolean reset) {
