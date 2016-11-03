@@ -35,7 +35,7 @@
             android:layout_toRightOf="@id/ivProfileImage"
             android:text="Name"
             android:textSize="16dp"
-            />
+            android:textColor="@android:color/black" />
 
         <TextView
             android:id="@+id/tvTagLine"
@@ -51,9 +51,10 @@
     <LinearLayout
         android:id="@+id/llCounts"
         android:orientation="horizontal"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
         android:layout_below="@id/rlUserHeader"
         >
 
@@ -61,22 +62,42 @@
             android:id="@+id/tvFollowers"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="5 Followers"/>
+            android:text="5"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="6dp"
+            android:text="Followers"/>
 
         <TextView
             android:id="@+id/tvFollowing"
             android:layout_marginLeft="20dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="5 Following"/>
+            android:text="5"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="6dp"
+            android:text="Following"/>
 
     </LinearLayout>
+    <View
+        android:id="@+id/line"
+        android:layout_width="match_parent"
+        android:layout_below="@+id/llCounts"
+        android:layout_height="1dp"
+        android:background="@android:color/black" />
 
     <FrameLayout
         android:id="@+id/flContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/rlCounts"
+        android:layout_below="@+id/line"
         android:layout_alignParentStart="true">
 
     </FrameLayout>
