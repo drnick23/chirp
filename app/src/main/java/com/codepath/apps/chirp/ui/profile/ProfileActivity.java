@@ -13,11 +13,11 @@ import com.bumptech.glide.Glide;
 import com.codepath.apps.chirp.R;
 import com.codepath.apps.chirp.TwitterApplication;
 import com.codepath.apps.chirp.models.Tweet;
+import com.codepath.apps.chirp.models.User;
+import com.codepath.apps.chirp.network.TwitterClient;
 import com.codepath.apps.chirp.ui.detail.DetailActivity;
 import com.codepath.apps.chirp.ui.timeline.TweetsAdapter;
 import com.codepath.apps.chirp.ui.timeline.fragments.UserTimelineFragment;
-import com.codepath.apps.chirp.models.User;
-import com.codepath.apps.chirp.network.TwitterClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONObject;
@@ -39,10 +39,16 @@ public class ProfileActivity extends AppCompatActivity implements TweetsAdapter.
         setSupportActionBar(toolbar);
 
         // get the screen name from activity
-        final String screenName = getIntent().getStringExtra("screen_name");
+        String screenName = getIntent().getStringExtra("screen_name");
+        // we may already have passed in the user
+        user = (User) Parcels.unwrap(getIntent().getParcelableExtra("user"));
+        if (screenName == null && user != null) {
+            screenName = user.getScreenName();
+        }
         getSupportActionBar().setTitle(screenName);
 
         if (savedInstanceState == null) {
+
             // create the user timeline fragment
             UserTimelineFragment fragmentUserTimeline = UserTimelineFragment.newInstance(screenName);
 
@@ -53,20 +59,25 @@ public class ProfileActivity extends AppCompatActivity implements TweetsAdapter.
             ft.commit();
         }
 
-        client = TwitterApplication.getRestClient();
-        client.getUserInfo(new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                user = User.fromJSON(response);
-                getSupportActionBar().setTitle(user.getScreenName());
-                setupProfileHeader(user);
-            }
+        if (user == null) {
+            client = TwitterApplication.getRestClient();
+            client.getUserInfo(new JsonHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    user = User.fromJSON(response);
+                    setupProfileHeader(user);
+                }
 
-        });
+            });
+        } else {
+            setupProfileHeader(user);
+        }
 
     }
 
     private void setupProfileHeader(User user) {
+        getSupportActionBar().setTitle(user.getScreenName());
+
         TextView tvName = (TextView) findViewById(R.id.tvName);
         TextView tagLine = (TextView) findViewById(R.id.tvTagLine);
         TextView tvFollowers = (TextView) findViewById(R.id.tvFollowers);
