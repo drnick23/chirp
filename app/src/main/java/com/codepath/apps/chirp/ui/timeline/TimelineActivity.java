@@ -18,15 +18,12 @@ import android.widget.Toast;
 import com.codepath.apps.chirp.R;
 import com.codepath.apps.chirp.models.Tweet;
 import com.codepath.apps.chirp.ui.compose.ComposeFragment;
-import com.codepath.apps.chirp.ui.detail.DetailActivity;
 import com.codepath.apps.chirp.ui.profile.ProfileActivity;
-
-import org.parceler.Parcels;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class TimelineActivity extends AppCompatActivity implements TweetsAdapter.OnTweetsAdapterListener, ComposeFragment.OnComposeListener {
+public class TimelineActivity extends AppCompatActivity implements ComposeFragment.OnComposeListener {
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -76,22 +73,6 @@ public class TimelineActivity extends AppCompatActivity implements TweetsAdapter
         //fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.Dialog_FullScreenSmallInset);
 
         fragment.show(fm, "compose");
-    }
-
-    @Override
-    public void onTweetClick(Tweet tweet) {
-        Log.d("DEBUG","CLICKED TWEET");
-        Intent i = new Intent(getApplicationContext(), DetailActivity.class);
-        i.putExtra("tweet", Parcels.wrap(tweet));
-        startActivity(i);
-    }
-
-    @Override
-    public void onTweetProfileImageClick(Tweet tweet) {
-        Log.d("DEBUG","CLICKED TWEET PROFILE IMAGE");
-        Intent i = new Intent(getApplicationContext(), ProfileActivity.class);
-        i.putExtra("user", Parcels.wrap(tweet.getUser()));
-        startActivity(i);
     }
 
     // results from fragments

@@ -1,6 +1,7 @@
 package com.codepath.apps.chirp.ui.timeline.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -16,7 +17,11 @@ import com.codepath.apps.chirp.TwitterApplication;
 import com.codepath.apps.chirp.helpers.EndlessRecyclerViewScrollListener;
 import com.codepath.apps.chirp.models.Tweet;
 import com.codepath.apps.chirp.network.TwitterClient;
+import com.codepath.apps.chirp.ui.detail.DetailActivity;
+import com.codepath.apps.chirp.ui.profile.ProfileActivity;
 import com.codepath.apps.chirp.ui.timeline.TweetsAdapter;
+
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
 
@@ -44,12 +49,12 @@ public class TweetsListFragment extends Fragment implements TweetsAdapter.OnTwee
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof TweetsAdapter.OnTweetsAdapterListener) {
+        /*if (context instanceof TweetsAdapter.OnTweetsAdapterListener) {
             listener = (TweetsAdapter.OnTweetsAdapterListener) context;
         } else {
             throw new ClassCastException(context.toString()
                     + " must implement TweetsAdapter.OnTweetsAdapterListener");
-        }
+        }*/
     }
 
     @Nullable
@@ -121,11 +126,17 @@ public class TweetsListFragment extends Fragment implements TweetsAdapter.OnTwee
 
     @Override
     public void onTweetClick(Tweet tweet) {
-        listener.onTweetClick(tweet);
+        Log.d("DEBUG","CLICKED TWEET");
+        Intent i = new Intent(getActivity(), DetailActivity.class);
+        i.putExtra("tweet", Parcels.wrap(tweet));
+        startActivity(i);
     }
 
     @Override
     public void onTweetProfileImageClick(Tweet tweet) {
-       listener.onTweetProfileImageClick(tweet);
+        Log.d("DEBUG","CLICKED TWEET PROFILE IMAGE");
+        Intent i = new Intent(getActivity(), ProfileActivity.class);
+        i.putExtra("user", Parcels.wrap(tweet.getUser()));
+        startActivity(i);
     }
 }
