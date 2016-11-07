@@ -47,7 +47,8 @@ The following **additional** features are implemented:
 
 Here's a walkthrough of implemented user stories:
 
-<img src='http://i.imgur.com/link/to/your/gif/file.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+<img src='http://i.imgur.com/WylT68H.gifv' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+Click for video/gif (http://i.imgur.com/WylT68H.gifv)
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
@@ -60,6 +61,12 @@ Describe any challenges encountered while building the app.
 - [Android Async HTTP](https://github.com/loopj/android-async-http) - Simple asynchronous HTTP requests with JSON parsing
 - [Picasso](http://square.github.io/picasso/) - Image loading and caching library for Android
 
+
+
+
+
+
+# Previous Project.
 # Project 3 - Chirp
 
 Chirp is an android app that allows a user to view his Twitter timeline and post a new tweet. The app utilizes [Twitter REST API](https://dev.twitter.com/rest/public).
@@ -113,7 +120,5 @@ The following **additional** features are implemented:
 ## gif/video
 
 Click for video/gif (http://i.imgur.com/74gf8wm.mp4)
-
-
 
 
