@@ -31,7 +31,7 @@ public class TimelineActivity extends AppCompatActivity implements ComposeFragme
     @BindView(R.id.abCompose)
     FloatingActionButton abCompose;
 
-   // private HomeTimelineFragment fragmentHomeTimeline;
+    private TimelineFragmentPagerAdapter timelineFragmentPagerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,8 +47,9 @@ public class TimelineActivity extends AppCompatActivity implements ComposeFragme
 
         // Get the ViewPager and set it's PagerAdapter so that it can display items
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
-        viewPager.setAdapter(new TimelineFragmentPagerAdapter(getSupportFragmentManager(),
-                TimelineActivity.this));
+        timelineFragmentPagerAdapter = new TimelineFragmentPagerAdapter(getSupportFragmentManager(),
+                TimelineActivity.this);
+        viewPager.setAdapter(timelineFragmentPagerAdapter);
 
         // Give the TabLayout the ViewPager
         TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
@@ -88,7 +89,7 @@ public class TimelineActivity extends AppCompatActivity implements ComposeFragme
 
             // TODO: scroll to top
             //fragmentTweetsList.addToTop(tweet);
-
+            timelineFragmentPagerAdapter.userSentTweet(tweet);
 
             Toast.makeText(this,"Sent Tweet!",Toast.LENGTH_LONG).show();
             Log.d("DEBUG","send tweet");

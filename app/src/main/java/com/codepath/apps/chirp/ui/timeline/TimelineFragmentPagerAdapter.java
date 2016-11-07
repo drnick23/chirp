@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import com.codepath.apps.chirp.models.Tweet;
 import com.codepath.apps.chirp.ui.timeline.fragments.HomeTimelineFragment;
 import com.codepath.apps.chirp.ui.timeline.fragments.MentionsTimelineFragment;
 
@@ -16,6 +17,9 @@ public class TimelineFragmentPagerAdapter extends FragmentPagerAdapter {
     final int PAGE_COUNT = 2;
     private String tabTitles[] = new String[] { "Home", "Mentions" };
     private Context context;
+
+    // keep a reference to the home timeline so we can update when sending a compose
+    private HomeTimelineFragment homeTimelineFragment;
 
     public TimelineFragmentPagerAdapter(FragmentManager fm, Context context) {
         super(fm);
@@ -30,15 +34,26 @@ public class TimelineFragmentPagerAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int position) {
         if (position == 0) {
-            return new HomeTimelineFragment();
+            if (homeTimelineFragment == null) {
+                homeTimelineFragment = new HomeTimelineFragment();
+            }
+            return homeTimelineFragment;
+        } else {
+            return new MentionsTimelineFragment();
         }
-        return new MentionsTimelineFragment();
+
     }
 
     @Override
     public CharSequence getPageTitle(int position) {
         // Generate title based on item position
         return tabTitles[position];
+    }
+
+    public void userSentTweet(Tweet tweet) {
+        if (homeTimelineFragment != null) {
+            homeTimelineFragment.addToTop(tweet);
+        }
     }
 
 }

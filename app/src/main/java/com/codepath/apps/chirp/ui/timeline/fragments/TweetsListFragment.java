@@ -106,22 +106,23 @@ public class TweetsListFragment extends Fragment implements TweetsAdapter.OnTwee
 
     }
 
-    public void addAll(ArrayList<Tweet> tweetList, boolean reset) {
-        if (reset) {
-            tweets.clear();
-        }
-        tweets.addAll(tweetList);
-        aTweets.notifyDataSetChanged();
-    }
-
+    // when adding a tweet, the home timeline gets it added to top
     public void addToTop(Tweet tweet) {
-        tweets.add(tweet);
+        tweets.add(0, tweet);
         aTweets.notifyDataSetChanged();
 
         linearLayoutManager.scrollToPositionWithOffset(0, 0);
 
         // TODO: call protected override class?
         // populateTimeline(0, true);
+    }
+
+    public void addAll(ArrayList<Tweet> tweetList, boolean reset) {
+        if (reset) {
+            tweets.clear();
+        }
+        tweets.addAll(tweetList);
+        aTweets.notifyDataSetChanged();
     }
 
     @Override
